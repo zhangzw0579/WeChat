@@ -67,7 +67,7 @@ namespace Apps.Web.Areas.WC.Controllers
 
                 //return new FixWeixinBugWeixinResult(messageHandler);
                 return new WeixinResult("参数错误！");
-
+                  
             }).ContinueWith<ActionResult>(task => task.Result);
         }
 
