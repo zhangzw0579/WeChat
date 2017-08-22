@@ -1,156 +1,94 @@
 /**
- * jQuery EasyUI 1.5.2
- * 
- * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
- *
- * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
- * To use it on other terms please contact us: info@jeasyui.com
- *
- */
-/**
  * linkbutton - jQuery EasyUI
  * 
+ * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
+ *
+ * Licensed under the GPL or commercial licenses
+ * To use it on other terms please contact us: jeasyui@gmail.com
+ * http://www.gnu.org/licenses/gpl.txt
+ * http://www.jeasyui.com/license_commercial.php
  */
 (function($){
-	function setSize(target, param){
-		var opts = $.data(target, 'linkbutton').options;
-		if (param){
-			$.extend(opts, param);
-		}
-		if (opts.width || opts.height || opts.fit){
-			var btn = $(target);
-			var parent = btn.parent();
-			var isVisible = btn.is(':visible');
-			if (!isVisible){
-				var spacer = $('<div style="display:none"></div>').insertBefore(target);
-				var style = {
-					position: btn.css('position'),
-					display: btn.css('display'),
-					left: btn.css('left')
-				};
-				btn.appendTo('body');
-				btn.css({
-					position: 'absolute',
-					display: 'inline-block',
-					left: -20000
-				});
-			}
-			btn._size(opts, parent);
-			var left = btn.find('.l-btn-left');
-			left.css('margin-top', 0);
-			left.css('margin-top', parseInt((btn.height()-left.height())/2)+'px');
-			if (!isVisible){
-				btn.insertAfter(spacer);
-				btn.css(style);
-				spacer.remove();
-			}
-		}
-	}
 	
 	function createButton(target) {
 		var opts = $.data(target, 'linkbutton').options;
-		var t = $(target).empty();
 		
-		t.addClass('l-btn').removeClass('l-btn-plain l-btn-selected l-btn-plain-selected l-btn-outline');
-		t.removeClass('l-btn-small l-btn-medium l-btn-large').addClass('l-btn-'+opts.size);
-		if (opts.plain){t.addClass('l-btn-plain')}
-		if (opts.outline){t.addClass('l-btn-outline')}
-		if (opts.selected){
-			t.addClass(opts.plain ? 'l-btn-selected l-btn-plain-selected' : 'l-btn-selected');
-		}
-		t.attr('group', opts.group || '');
-		t.attr('id', opts.id || '');
-		
-		var inner = $('<span class="l-btn-left"></span>').appendTo(t);
-		if (opts.text){
-			$('<span class="l-btn-text"></span>').html(opts.text).appendTo(inner);
+		$(target).empty();
+		$(target).addClass('l-btn');
+		if (opts.id){
+			$(target).attr('id', opts.id);
 		} else {
-			$('<span class="l-btn-text l-btn-empty">&nbsp;</span>').appendTo(inner);
+//			$.fn.removeProp ? $(target).removeProp('id') : $(target).removeAttr('id'); 
+//			$(target).removeAttr('id');
+			$(target).attr('id', '');
 		}
-		if (opts.iconCls){
-			$('<span class="l-btn-icon">&nbsp;</span>').addClass(opts.iconCls).appendTo(inner);
-			inner.addClass('l-btn-icon-'+opts.iconAlign);
+		if (opts.plain){
+			$(target).addClass('l-btn-plain');
+		} else {
+			$(target).removeClass('l-btn-plain');
 		}
 		
-		t.unbind('.linkbutton').bind('focus.linkbutton',function(){
+		if (opts.text){
+			$(target).html(opts.text).wrapInner(
+					'<span class="l-btn-left">' +
+					'<span class="l-btn-text">' +
+					'</span>' +
+					'</span>'
+			);
+			if (opts.iconCls){
+				$(target).find('.l-btn-text').addClass(opts.iconCls).addClass(opts.iconAlign=='left' ? 'l-btn-icon-left' : 'l-btn-icon-right');
+			}
+		} else {
+			$(target).html('&nbsp;').wrapInner(
+					'<span class="l-btn-left">' +
+					'<span class="l-btn-text">' +
+					'<span class="l-btn-empty"></span>' +
+					'</span>' +
+					'</span>'
+			);
+			if (opts.iconCls){
+				$(target).find('.l-btn-empty').addClass(opts.iconCls);
+			}
+		}
+		$(target).unbind('.linkbutton').bind('focus.linkbutton',function(){
 			if (!opts.disabled){
-				$(this).addClass('l-btn-focus');
+				$(this).find('span.l-btn-text').addClass('l-btn-focus');
 			}
 		}).bind('blur.linkbutton',function(){
-			$(this).removeClass('l-btn-focus');
-		}).bind('click.linkbutton',function(){
-			if (!opts.disabled){
-				if (opts.toggle){
-					if (opts.selected){
-						$(this).linkbutton('unselect');
-					} else {
-						$(this).linkbutton('select');
-					}
-				}
-				opts.onClick.call(this);
-			}
-//			return false;
+			$(this).find('span.l-btn-text').removeClass('l-btn-focus');
 		});
-//		if (opts.toggle && !opts.disabled){
-//			t.bind('click.linkbutton', function(){
-//				if (opts.selected){
-//					$(this).linkbutton('unselect');
-//				} else {
-//					$(this).linkbutton('select');
-//				}
-//			});
-//		}
 		
-		setSelected(target, opts.selected)
 		setDisabled(target, opts.disabled);
-	}
-	
-	function setSelected(target, selected){
-		var opts = $.data(target, 'linkbutton').options;
-		if (selected){
-			if (opts.group){
-				$('a.l-btn[group="'+opts.group+'"]').each(function(){
-					var o = $(this).linkbutton('options');
-					if (o.toggle){
-						$(this).removeClass('l-btn-selected l-btn-plain-selected');
-						o.selected = false;
-					}
-				});
-			}
-			$(target).addClass(opts.plain ? 'l-btn-selected l-btn-plain-selected' : 'l-btn-selected');
-			opts.selected = true;
-		} else {
-			if (!opts.group){
-				$(target).removeClass('l-btn-selected l-btn-plain-selected');
-				opts.selected = false;
-			}
-		}
 	}
 	
 	function setDisabled(target, disabled){
 		var state = $.data(target, 'linkbutton');
-		var opts = state.options;
-		$(target).removeClass('l-btn-disabled l-btn-plain-disabled');
 		if (disabled){
-			opts.disabled = true;
+			state.options.disabled = true;
 			var href = $(target).attr('href');
 			if (href){
 				state.href = href;
-				$(target).attr('href', 'javascript:;');
+				$(target).attr('href', 'javascript:void(0)');
 			}
 			if (target.onclick){
 				state.onclick = target.onclick;
 				target.onclick = null;
 			}
-			opts.plain ? $(target).addClass('l-btn-disabled l-btn-plain-disabled') : $(target).addClass('l-btn-disabled');
+//			var onclick = $(target).attr('onclick');
+//			if (onclick) {
+//				state.onclick = onclick;
+//				$(target).attr('onclick', '');
+//			}
+			$(target).addClass('l-btn-disabled');
 		} else {
-			opts.disabled = false;
+			state.options.disabled = false;
 			if (state.href) {
 				$(target).attr('href', state.href);
 			}
 			if (state.onclick) {
 				target.onclick = state.onclick;
 			}
+			$(target).removeClass('l-btn-disabled');
 		}
 	}
 	
@@ -169,27 +107,15 @@
 					options: $.extend({}, $.fn.linkbutton.defaults, $.fn.linkbutton.parseOptions(this), options)
 				});
 				$(this).removeAttr('disabled');
-				$(this).bind('_resize', function(e, force){
-					if ($(this).hasClass('easyui-fluid') || force){
-						setSize(this);
-					}
-					return false;
-				});
 			}
 			
 			createButton(this);
-			setSize(this);
 		});
 	};
 	
 	$.fn.linkbutton.methods = {
 		options: function(jq){
 			return $.data(jq[0], 'linkbutton').options;
-		},
-		resize: function(jq, param){
-			return jq.each(function(){
-				setSize(this, param);
-			});
 		},
 		enable: function(jq){
 			return jq.each(function(){
@@ -200,26 +126,14 @@
 			return jq.each(function(){
 				setDisabled(this, true);
 			});
-		},
-		select: function(jq){
-			return jq.each(function(){
-				setSelected(this, true);
-			});
-		},
-		unselect: function(jq){
-			return jq.each(function(){
-				setSelected(this, false);
-			});
 		}
 	};
 	
 	$.fn.linkbutton.parseOptions = function(target){
 		var t = $(target);
-		return $.extend({}, $.parser.parseOptions(target, 
-			['id','iconCls','iconAlign','group','size','text',{plain:'boolean',toggle:'boolean',selected:'boolean',outline:'boolean'}]
-		), {
+		return $.extend({}, $.parser.parseOptions(target, ['id','iconCls','iconAlign',{plain:'boolean'}]), {
 			disabled: (t.attr('disabled') ? true : undefined),
-			text: ($.trim(t.html()) || undefined),
+			text: $.trim(t.html()),
 			iconCls: (t.attr('icon') || t.attr('iconCls'))
 		});
 	};
@@ -227,16 +141,10 @@
 	$.fn.linkbutton.defaults = {
 		id: null,
 		disabled: false,
-		toggle: false,
-		selected: false,
-		outline: false,
-		group: null,
 		plain: false,
 		text: '',
 		iconCls: null,
-		iconAlign: 'left',
-		size: 'small',	// small,large
-		onClick: function(){}
+		iconAlign: 'left'
 	};
 	
 })(jQuery);

@@ -1,17 +1,15 @@
 /**
- * jQuery EasyUI 1.5.2
- * 
- * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
- *
- * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
- * To use it on other terms please contact us: info@jeasyui.com
- *
- */
-/**
  * draggable - jQuery EasyUI
  * 
+ * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
+ *
+ * Licensed under the GPL or commercial licenses
+ * To use it on other terms please contact us: jeasyui@gmail.com
+ * http://www.gnu.org/licenses/gpl.txt
+ * http://www.jeasyui.com/license_commercial.php
  */
 (function($){
+	var isDragging = false;
 	function drag(e){
 		var state = $.data(e.data.target, 'draggable');
 		var opts = state.options;
@@ -43,6 +41,13 @@
 			}
 		}
 		
+//		if (opts.deltaX != null && opts.deltaX != undefined){
+//			left = e.pageX + opts.deltaX;
+//		}
+//		if (opts.deltaY != null && opts.deltaY != undefined){
+//			top = e.pageY + opts.deltaY;
+//		}
+		
 		if (e.data.parent != document.body) {
 			left += $(e.data.parent).scrollLeft();
 			top += $(e.data.parent).scrollTop();
@@ -65,6 +70,12 @@
 		if (!proxy){
 			proxy = $(e.data.target);
 		}
+//		if (proxy){
+//			proxy.css('cursor', opts.cursor);
+//		} else {
+//			proxy = $(e.data.target);
+//			$.data(e.data.target, 'draggable').handle.css('cursor', opts.cursor);
+//		}
 		proxy.css({
 			left:e.data.left,
 			top:e.data.top
@@ -73,12 +84,11 @@
 	}
 	
 	function doDown(e){
-		if (!$.fn.draggable.isDragging){return false;}
-		
+		isDragging = true;
 		var state = $.data(e.data.target, 'draggable');
 		var opts = state.options;
-
-		var droppables = $('.droppable:visible').filter(function(){
+		
+		var droppables = $('.droppable').filter(function(){
 			return e.data.target != this;
 		}).filter(function(){
 			var accept = $.data(this, 'droppable').options.accept;
@@ -115,8 +125,6 @@
 	}
 	
 	function doMove(e){
-		if (!$.fn.draggable.isDragging){return false;}
-		
 		var state = $.data(e.data.target, 'draggable');
 		drag(e);
 		if (state.options.onDrag.call(e.data.target, e) != false){
@@ -148,11 +156,8 @@
 	}
 	
 	function doUp(e){
-		if (!$.fn.draggable.isDragging){
-			clearDragging();
-			return false;
-		}
-		
+		isDragging = false;
+//		drag(e);
 		doMove(e);
 		
 		var state = $.data(e.data.target, 'draggable');
@@ -201,7 +206,10 @@
 		
 		opts.onStopDrag.call(e.data.target, e);
 		
-		clearDragging();
+		$(document).unbind('.draggable');
+		setTimeout(function(){
+			$('body').css('cursor','');
+		},100);
 		
 		function removeProxy(){
 			if (proxy){
@@ -226,8 +234,8 @@
 							top:e.data.startTop
 						});
 					}
-					$(this).trigger('_drop', [e.data.target]);
 					removeProxy();
+					$(this).trigger('_drop', [e.data.target]);
 					dropped = true;
 					this.entered = false;
 					return false;
@@ -240,18 +248,6 @@
 		}
 		
 		return false;
-	}
-	
-	function clearDragging(){
-		if ($.fn.draggable.timer){
-			clearTimeout($.fn.draggable.timer);
-			$.fn.draggable.timer = undefined;
-		}
-		$(document).unbind('.draggable');
-		$.fn.draggable.isDragging = false;
-		setTimeout(function(){
-			$('body').css('cursor','');
-		},100);
 	}
 	
 	$.fn.draggable = function(options, param){
@@ -268,20 +264,26 @@
 			} else {
 				opts = $.extend({}, $.fn.draggable.defaults, $.fn.draggable.parseOptions(this), options || {});
 			}
-			var handle = opts.handle ? (typeof opts.handle=='string' ? $(opts.handle, this) : opts.handle) : $(this);
 			
+			if (opts.disabled == true) {
+				$(this).css('cursor', '');
+//				$(this).css('cursor', 'default');
+				return;
+			}
+			
+			var handle = null;
+            if (typeof opts.handle == 'undefined' || opts.handle == null){
+                handle = $(this);
+            } else {
+                handle = (typeof opts.handle == 'string' ? $(opts.handle, this) : opts.handle);
+            }
 			$.data(this, 'draggable', {
 				options: opts,
 				handle: handle
 			});
 			
-			if (opts.disabled) {
-				$(this).css('cursor', '');
-				return;
-			}
-			
 			handle.unbind('.draggable').bind('mousemove.draggable', {target:this}, function(e){
-				if ($.fn.draggable.isDragging){return}
+				if (isDragging) return;
 				var opts = $.data(e.data.target, 'draggable').options;
 				if (checkArea(e)){
 					$(this).css('cursor', opts.cursor);
@@ -304,8 +306,6 @@
 					top: position.top,
 					startX: e.pageX,
 					startY: e.pageY,
-					width: $(e.data.target).outerWidth(),
-					height: $(e.data.target).outerHeight(),
 					offsetWidth: (e.pageX - offset.left),
 					offsetHeight: (e.pageY - offset.top),
 					target: e.data.target,
@@ -319,12 +319,7 @@
 				$(document).bind('mousedown.draggable', e.data, doDown);
 				$(document).bind('mousemove.draggable', e.data, doMove);
 				$(document).bind('mouseup.draggable', e.data, doUp);
-				
-				$.fn.draggable.timer = setTimeout(function(){
-					$.fn.draggable.isDragging = true;
-					doDown(e);
-				}, opts.delay);
-				return false;
+//				$('body').css('cursor', opts.cursor);
 			});
 			
 			// check if the handle can be dragged
@@ -368,7 +363,7 @@
 		var t = $(target);
 		return $.extend({}, 
 				$.parser.parseOptions(target, ['cursor','handle','axis',
-				       {'revert':'boolean','deltaX':'number','deltaY':'number','edge':'number','delay':'number'}]), {
+				       {'revert':'boolean','deltaX':'number','deltaY':'number','edge':'number'}]), {
 			disabled: (t.attr('disabled') ? true : undefined)
 		});
 	};
@@ -384,14 +379,10 @@
 		disabled: false,
 		edge:0,
 		axis:null,	// v or h
-		delay:100,
 		
 		onBeforeDrag: function(e){},
 		onStartDrag: function(e){},
 		onDrag: function(e){},
 		onStopDrag: function(e){}
 	};
-	
-	$.fn.draggable.isDragging = false;
-	
 })(jQuery);

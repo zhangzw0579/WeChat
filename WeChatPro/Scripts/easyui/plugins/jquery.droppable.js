@@ -1,10 +1,12 @@
-/**
- * jQuery EasyUI 1.5.2
+﻿/**
+ * jQuery EasyUI 1.3.2
  * 
- * Copyright (c) 2009-2017 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
- * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
- * To use it on other terms please contact us: info@jeasyui.com
+ * Licensed under the GPL or commercial licenses
+ * To use it on other terms please contact us: jeasyui@gmail.com
+ * http://www.gnu.org/licenses/gpl.txt
+ * http://www.jeasyui.com/license_commercial.php
  *
  */
 (function($){
