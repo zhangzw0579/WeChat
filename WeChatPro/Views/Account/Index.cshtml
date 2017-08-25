@@ -83,7 +83,16 @@
             }
             $("#Loading").show();
 
-            alert(1);
+            $.post('/Account/Login', { UserName: $("#UserName").val(), Password: $("#Password").val(), Code: $("#ValidateCode").val() },
+              function (data) {
+
+                  if (data.type == "1") {
+                      window.location = "/Home/Index"
+                  } else {
+                      $("#mes").html(data.message);
+                  }
+                  $("#Loading").hide();
+              }, "json");
             return false;
         }
 
@@ -134,7 +143,11 @@
                             <td style="width: 80px; text-align: right">
                                 验证码：
                             </td>
-                            <td></td>
+                            <td>
+                                <input style="width: 50px" type="text" name="ValidateCode" id="ValidateCode" />
+                                <img id="codeImg" alt="刷新验证码！" style="margin-bottom: -8px; cursor: pointer;" src="/App.Admin/verify_code.ashx" onclick="this.src=this.src+'?'" />
+                                <a href="javascript:$('#codeImg').trigger('click')">看不清？</a>
+                            </td>
                         </tr>
 
 

@@ -76,7 +76,7 @@
       });
 $(function () {
     /*为选项卡绑定右键*/
-    $(".tabs li").live('contextmenu', function (e) {
+    $$(".tabs li").bind('contextmenu', function (e) {
         /*选中当前触发事件的选项卡 */
         var subtitle = $(this).text();
         $('#mainTab').tabs('select', subtitle);
@@ -123,31 +123,3 @@ function createFrame(url) {
             });
         });
     });
-    $(function () {
-
-        var o = {
-            showcheck: false,
-            url: "/Home/GetTree",
-            onnodeclick: function (item) {
-                var tabTitle = item.text;
-                var url = "../../" + item.value;
-                var icon = item.Icon;
-                if (!item.hasChildren) {
-                    addTab(tabTitle, url, icon);
-                } else {
-
-                    $(this).parent().find("img").trigger("click");
-                }
-            }
-        }
-        $.post("/Home/GetTree", { "id": "0" },
-            function (data) {
-                if (data == "0") {
-                    window.location = "/Account";
-                }
-                o.data = data;
-                $("#RightTree").treeview(o);
-            }, "json");
-    });
-
-     

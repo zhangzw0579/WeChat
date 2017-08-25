@@ -7,13 +7,14 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WeChatPro;
+using WeChatPro.App.Admin;
 using WeChatPro.Models;
 
 namespace WeChatPro.Controllers
 {
-    public class SysSamplesController : Controller
+    public class SysSamplesController : BaseController
     {
-        private Model1 db = new Model1();
+        private DBEntities db = new DBEntities();
        
         // GET: SysSamples
         public ActionResult Index()
@@ -62,17 +63,21 @@ namespace WeChatPro.Controllers
         [HttpPost]
         public JsonResult Create(SysSample model)
         {
-           // if (ModelState.IsValid)
-           //{
-                db.SysSample.Add(model);
-                if (db.SaveChanges() > 0)
+            // if (ModelState.IsValid)
+            //{
+
+
+            db.SysSample.Add(model);
+
+            if (db.SaveChanges() > 0)
                 {
+                    App.Admin.LogHandler.WriteServiceLog("虚拟用户", "Id:" + model.Id + ",Name:" + model.Name, "成功", "创建", "样例程序");
                     return Json(1, JsonRequestBehavior.AllowGet);
                 }
             else
             {
-
-                return Json(0, JsonRequestBehavior.AllowGet);
+                    App.Admin.LogHandler.WriteServiceLog("虚拟用户", "Id:" + model.Id + ",Name:" + model.Name, "失败", "创建", "样例程序");
+                     return Json(0, JsonRequestBehavior.AllowGet);
             }
            
           
@@ -147,9 +152,17 @@ namespace WeChatPro.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetList()
+        public JsonResult GetList(string queryStr)
         {
+            
             List<SysSample> list = db.SysSample.ToList();
+
+        
+            if (!string.IsNullOrWhiteSpace(queryStr))
+            {
+                list = list.Where(a => a.Name.Contains(queryStr)).ToList();
+ 
+            }
             var json = new
             {
                 total = list.Count,

@@ -191,6 +191,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.Admin\BaseController.cs" />
+    <Compile Include="App.Admin\ExtendMvcHtml.cs" />
+    <Compile Include="App.Admin\LogHandler.cs" />
+    <Compile Include="App.Admin\verify_code.ashx.cs">
+      <DependentUpon>verify_code.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="App.BLL.Core\BaseBLL.cs" />
+    <Compile Include="App.BLL.Core\ExceptionHander.cs" />
+    <Compile Include="App.BLL.Core\IAccountBLL.cs" />
+    <Compile Include="App.BLL.Core\SupportFilter.cs" />
+    <Compile Include="App.Common\BaseException.cs" />
+    <Compile Include="App.Common\GridPager.cs" />
+    <Compile Include="App.Common\JsonHandler.cs" />
+    <Compile Include="App.Common\LinqHelper.cs" />
+    <Compile Include="App.Common\ResultHelper.cs" />
+    <Compile Include="App.Common\Suggestion.cs" />
+    <Compile Include="App.Common\ToJsonResult.cs" />
+    <Compile Include="App.Common\ValidationError.cs" />
+    <Compile Include="App.Common\ValueConvert.cs" />
+    <Compile Include="App.IDAL\AccountRepository.cs" />
+    <Compile Include="App.IDAL\IAccountRepository.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -198,17 +219,62 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SysExceptionModelsController.cs" />
+    <Compile Include="Controllers\SysLogsController.cs" />
     <Compile Include="Controllers\SysSamplesController.cs" />
     <Compile Include="Controllers\WeChatController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Model1.cs" />
-    <Compile Include="Models\SysModule.cs" />
-    <Compile Include="Models\SysSample.cs" />
+    <Compile Include="Models\Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\P_Sys_GetRightOperate_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysException.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysLog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysModule.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysModuleOperate.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysRight.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysRightOperate.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysRole.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysSample.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SysUser.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -217,10 +283,19 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\home.js" />
     <Content Include="Scripts\jquery.easyui.min.js" />
-    <Content Include="Scripts\jquery.easyui.mobile.js" />
     <Content Include="Scripts\jquery.easyui.plus.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.min.js" />
@@ -259,8 +334,27 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
+    <Content Include="App.Admin\verify_code.ashx" />
+    <EntityDeploy Include="Models\Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
     <None Include="Project_Readme.html" />
     <Content Include="Views\Shared\_Index_LayoutEdit.cshtml" />
+    <Content Include="Views\SysLogs\Create.cshtml" />
+    <Content Include="Views\SysLogs\Delete.cshtml" />
+    <Content Include="Views\SysLogs\Details.cshtml" />
+    <Content Include="Views\SysLogs\Edit.cshtml" />
+    <Content Include="Views\SysLogs\Index.cshtml" />
+    <Content Include="Views\SysExceptionModels\Create.cshtml" />
+    <Content Include="Views\SysExceptionModels\Delete.cshtml" />
+    <Content Include="Views\SysExceptionModels\Details.cshtml" />
+    <Content Include="Views\SysExceptionModels\Edit.cshtml" />
+    <Content Include="Views\SysExceptionModels\Index.cshtml" />
+    <Content Include="Views\SysExceptionModels\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

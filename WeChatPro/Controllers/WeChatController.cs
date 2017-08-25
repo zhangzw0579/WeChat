@@ -8,11 +8,12 @@ using System.Web.Mvc;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.MvcExtension;
 using Senparc.Weixin.MP;
+using WeChatPro.App.Admin;
 //using Apps.Web.Areas.WC.Core;
 
 namespace Apps.Web.Areas.WC.Controllers
 {
-    public class WeChatController : Controller
+    public class WeChatController : BaseController
     {
         public static readonly string Token = "WeixinToken";//与微信公众账号后台的Token设置保持一致，区分大小写。
         public static readonly string EncodingAESKey = "dEq1BjMgmkEyOvva8pQfFwX95hBLOYKpAzBJ5y9pdSK";//与微信公众账号后台的EncodingAESKey设置保持一致，区分大小写。

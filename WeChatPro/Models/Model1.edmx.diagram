@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ab3a2451a75740d78f4815731d3681f1" Name="Diagram1">
+        <EntityTypeShape EntityType="DBModel.SysException" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysLog" Width="1.5" PointX="8.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysModule" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysModuleOperate" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysRight" Width="1.5" PointX="6" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysRightOperate" Width="1.5" PointX="8.25" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysRole" Width="1.5" PointX="3.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysSample" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModel.SysUser" Width="1.5" PointX="6" PointY="6.125" IsExpanded="true" />
+        <AssociationConnector Association="DBModel.FK_SysModule_SysModule" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_SysModuleOperate_SysModule" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_SysRight_SysModule" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_SysRight_SysRole" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK_SysRightOperate_SysRight" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.SysRoleSysUser" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
